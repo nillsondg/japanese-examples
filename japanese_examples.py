@@ -27,12 +27,12 @@ MAX = 20          # Amount to temporarily show when this add-on is loaded
 MAX_PERMANENT = 5 # Amount to add permanently to the Examples field
 
 # Only try lookups if the note's model name contains (case insensitive):
-NOTE_TRIGGER = "example_sentences"
+NOTE_TRIGGER = "Japanese"
 
 # Source and destination fields (edit if the names if your fields are different)
 # These field names are case sensitive
-SOURCE_FIELDS = ["Expression", "kanji-vocab"]
-DEST_FIELD = "Examples"
+SOURCE_FIELDS = ["Expression", "vocab"]
+DEST_FIELD = "ExampleSentences"
 
 # Prefer shorter sentences by weighting?
 WEIGHTED_SAMPLE = True
@@ -152,8 +152,8 @@ def find_examples(expression, maxitems):
             for j in index:
                 example = content[j].split("#ID=")[0][3:]
                 if dictionary == dictionaries[0]:
-                    example = example + " {CHECKED}"
-                example = example.replace(expression,'<FONT COLOR="#ff0000">%s</FONT>' %expression)
+                    example = "<span class='checked'>&#10003;</span>" + example
+                example = example.replace(expression,'%s' %expression)
                 color_example = content[j+1]
                 regexp = "(?:\(*%s\)*)(?:\([^\s]+?\))*(?:\[\d+\])*\{(.+?)\}" %expression
                 match = re.compile("%s" %regexp).search(color_example)
@@ -161,13 +161,13 @@ def find_examples(expression, maxitems):
                 match_reading = re.search(regexp_reading, color_example)
                 if match:
                     expression_bis = match.group(1)
-                    example = example.replace(expression_bis,'<FONT COLOR="#ff0000">%s</FONT>' %expression_bis)
+                    example = example.replace(expression_bis,'<span class="match">%s<span>' %expression_bis)
                 elif match_reading:
                     expression_bis = match_reading.group(1)
-                    example = example.replace(expression_bis,'<FONT COLOR="#ff0000">%s</FONT>' %expression_bis) 
+                    example = example.replace(expression_bis,'<span class="matchReading">%s</span>' %expression_bis) 
                 else:
-                    example = example.replace(expression,'<FONT COLOR="#ff0000">%s</FONT>' %expression)
-                examples.append("%s<br>%s" % tuple(example.split('\t')))
+                    example = example.replace(expression,'<u>%s</u>' %expression)
+                examples.append("<div class='example'>%s</div><div class='translation'>%s</div>" % tuple(example.split('\t')))
         else:
             match = re.search(u"(.*?)[／/]", expression)
             if match:
