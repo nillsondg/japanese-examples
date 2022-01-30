@@ -136,8 +136,8 @@ def find_examples(expression, maxitems):
             for j in index:
                 example = content[j].split("#ID=")[0][3:]
                 if dictionary == dictionaries[0]:
-                    example = example + " {CHECKED}"
-                example = example.replace(expression,'<FONT COLOR="#ff0000">%s</FONT>' %expression)
+                    example = "<span class='checked'>&#10003;</span>" + example
+                example = example.replace(expression,'%s' %expression)
                 color_example = content[j+1]
                 regexp = r"(?:\(*%s\)*)(?:\([^\s]+?\))*(?:\[\d+\])*\{(.+?)\}" %expression
                 match = re.compile("%s" %regexp).search(color_example)
@@ -145,13 +145,13 @@ def find_examples(expression, maxitems):
                 match_reading = re.search(regexp_reading, color_example)
                 if match:
                     expression_bis = match.group(1)
-                    example = example.replace(expression_bis,'<FONT COLOR="#ff0000">%s</FONT>' %expression_bis)
+                    example = example.replace(expression_bis,'<span class="match">%s<span>' %expression_bis)
                 elif match_reading:
                     expression_bis = match_reading.group(1)
-                    example = example.replace(expression_bis,'<FONT COLOR="#ff0000">%s</FONT>' %expression_bis)
+                    example = example.replace(expression_bis,'<span class="matchReading">%s</span>' %expression_bis)
                 else:
-                    example = example.replace(expression,'<FONT COLOR="#ff0000">%s</FONT>' %expression)
-                examples.append(tuple(example.split('\t')))
+                    example = example.replace(expression,'<u>%s</u>' %expression)
+                examples.append("<div class='example'>%s</div><div class='translation'>%s</div>" % tuple(example.split('\t')))
         else:
             match = re.search(u"(.*?)[／/]", expression)
             if match:
